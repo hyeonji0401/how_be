@@ -1,13 +1,13 @@
 package HOW.how.controller;
 
 import HOW.how.domain.User;
+import HOW.how.dto.LoginRequestDTO;
 import HOW.how.dto.UserFormDTO;
 import HOW.how.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/user")
@@ -19,10 +19,25 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping
+    @PostMapping("/join")
     public User createUser(@RequestBody UserFormDTO userFormDTO){
         System.out.print(userFormDTO.getEmail());
         System.out.println(userFormDTO.getPassword());
         return userService.createUser(userFormDTO);
     }
+
+    //로그인
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequestDTO loginRequestDTO){
+        User user = userService.loginRequest(loginRequestDTO);
+
+        //로그인 실패 시 오류 코드 전송
+        if(user==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
+
 }
