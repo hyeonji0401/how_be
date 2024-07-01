@@ -19,11 +19,14 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    //회원가입
     @Override
     public User createUser(UserFormDTO userFormDTO){
         User user = new User();
         user.setEmail(userFormDTO.getEmail());
         user.setPassword(userFormDTO.getPassword());
+        user.setName(userFormDTO.getName());
+        user.setPhoneNumber(userFormDTO.getPhoneNumber());
         return userRepository.save(user);
     }
 
