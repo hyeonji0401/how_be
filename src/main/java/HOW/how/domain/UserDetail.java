@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Data
@@ -14,12 +16,21 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class UserDetail {
     @Id
     String detailId;
-    String userId;
-    String location;
-    String disabilityClassification;
-    String certificate;
-    String academicBackground;
-    String occupationalCategory;
-    int age;
+    @DBRef //참조
+    User userId;
+    private int age;
+    private String disability;
+    private Degree disabilityDegree;
+    private Degree education;
+    private List<String> licenses;
+    private String experience;
+    private String region;
+    private String job;
+    private String digitalLiteracy;
+    private List<String> languageSkills;
+    private String interests;
+    private String strengths;
+    private String workSupport;
 
 }
+
