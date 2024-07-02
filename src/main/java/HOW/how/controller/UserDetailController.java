@@ -19,7 +19,7 @@ public class UserDetailController {
         this.userDetailService = userDetailService;
     }
 
-    //사용자 정보 입력
+    //로드맵을 위한 사용자 정보 입력
     @PostMapping
     public UserDetail createUserDetail(@RequestBody UserDetailFormDTO userDetailFormDTO)
     {
