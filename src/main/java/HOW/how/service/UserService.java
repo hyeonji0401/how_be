@@ -10,5 +10,6 @@ public interface UserService {
     User createUser(UserFormDTO userFormDTO);
     User loginRequest(LoginRequestDTO loginRequestDTO);
 
+    User updateUser(UserFormDTO userFormDTO);
 
 }

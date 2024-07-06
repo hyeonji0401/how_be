@@ -39,5 +39,17 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    //회원정보 수정
+    @PutMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestBody UserFormDTO userFormDTO){
+        User user= userService.updateUser(userFormDTO);
+
+        if(user==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(user);
+    }
+
 
 }
