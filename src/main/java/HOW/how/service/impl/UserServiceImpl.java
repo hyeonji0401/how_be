@@ -52,4 +52,22 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    //@Override
+    public User updateUser(UserFormDTO userFormDTO){
+        Optional<User> optionalUser = userRepository.findByEmail(userFormDTO.getEmail());
+
+        // 해당 이메일 없을 시 null 반환
+        if(optionalUser.isEmpty()){
+            return null;
+        }
+
+        // 이메일 존재할 시 정보 업데이트
+        User user = optionalUser.get();
+        user.setPassword(userFormDTO.getPassword());
+        user.setName(userFormDTO.getName());
+        user.setPhoneNumber(userFormDTO.getPhoneNumber());
+
+        return userRepository.save(user);
+    }
+
 }
