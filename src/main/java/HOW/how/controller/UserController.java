@@ -39,7 +39,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    //회원정보 수정
+    //회원 정보 수정
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody UserFormDTO userFormDTO){
         User user= userService.updateUser(userFormDTO);
