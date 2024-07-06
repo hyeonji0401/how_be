@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserFormDTO {
+public class MemberFormDTO {
     private String id;
     @NotNull(message = "이메일은 빈칸일 수 없습니다")
     private String email;

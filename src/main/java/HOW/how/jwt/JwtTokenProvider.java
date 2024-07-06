@@ -1,4 +1,4 @@
-package HOW.how;
+package HOW.how.jwt;
 
 import HOW.how.dto.TokenInfoDTO;
 import io.jsonwebtoken.*;

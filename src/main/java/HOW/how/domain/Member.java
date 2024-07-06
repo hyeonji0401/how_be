@@ -6,11 +6,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
 @Data
-@Document(collection = "user")
-public class User {
+@Document(collection = "member")
+public class Member {
     @Id
     private String id;
     @Indexed(unique = true)

@@ -1,23 +1,19 @@
 package HOW.how.domain;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Getter
-@Setter
 @Data
-@Document(collection = "userDetail")
-public class UserDetail {
+@Document(collection = "memberDetail")
+public class MemberDetail {
     @Id
     String detailId;
     @DBRef //참조
-    User userId;
+    Member memberId;
     private int age;
     private String disability;
     private Degree disabilityDegree;
