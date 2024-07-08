@@ -10,8 +10,6 @@ import lombok.Setter;
 import java.util.List;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 public class MemberDetailFormDTO {
     @NotNull(message = "DB 생성 오류")

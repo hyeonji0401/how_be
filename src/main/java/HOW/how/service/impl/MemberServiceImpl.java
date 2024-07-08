@@ -6,13 +6,23 @@ import HOW.how.dto.MemberFormDTO;
 import HOW.how.repository.MemberRepository;
 import HOW.how.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+
 
     @Autowired
     public MemberServiceImpl(MemberRepository memberRepository){
@@ -23,10 +33,13 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public Member createMember(MemberFormDTO memberFormDTO){
         Member member = new Member();
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
         member.setEmail(memberFormDTO.getEmail());
         member.setPassword(memberFormDTO.getPassword());
         member.setName(memberFormDTO.getName());
         member.setPhoneNumber(memberFormDTO.getPhoneNumber());
+        member.setRoles(roles);
         return memberRepository.save(member);
     }
 
@@ -34,21 +47,15 @@ public class MemberServiceImpl implements MemberService {
     //로그인
     @Override
     public Member loginRequest(LoginRequestDTO loginRequestDTO){
-        //입력받은 이메일로 조회
+        // 이메일을 기반으로 사용자 찾기
         Optional<Member> optionalMember = memberRepository.findByEmail(loginRequestDTO.getEmail());
-
-        //해당 이메일 없을 시 null 반환
-        if(optionalMember.isEmpty()){
-            return null;
+        if (!optionalMember.isPresent()) {
+            throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + loginRequestDTO.getEmail());
         }
 
-        //이메일 존재할 시 비밀번호 비교
         Member member = optionalMember.get();
-        if(!member.getPassword().equals(loginRequestDTO.getPassword())){
-            return null;
-        }
+       return member;
 
-        return member;
 
     }
 
