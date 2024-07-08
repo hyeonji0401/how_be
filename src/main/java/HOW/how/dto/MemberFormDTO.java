@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@Getter
-@Setter
 @AllArgsConstructor
 public class MemberFormDTO {
     private String id;

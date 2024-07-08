@@ -7,6 +7,7 @@ import HOW.how.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,15 +29,10 @@ public class MemberController {
 
     //로그인
     @PostMapping("/login")
-    public ResponseEntity<Member> login(@RequestBody LoginRequestDTO loginRequestDTO){
+    public Member login(@RequestBody LoginRequestDTO loginRequestDTO){
+        System.out.println("로그인 요청");
         Member member = memberService.loginRequest(loginRequestDTO);
-
-        //로그인 실패 시 오류 코드 전송
-        if(member ==null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok(member);
+        return member;
     }
 
     //회원 정보 수정
