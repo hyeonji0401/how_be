@@ -45,7 +45,7 @@ public class SecurityConfig {
                 .httpBasic((auth)->auth.disable());
         http
                 .authorizeHttpRequests((auth)->auth
-                        .requestMatchers("/", "/member/login", "/member/join").permitAll()
+                        .requestMatchers("/", "/member/login", "/member/signup").permitAll()
                         .anyRequest().authenticated());
         http
                 .sessionManagement((session)->session
