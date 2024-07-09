@@ -43,6 +43,7 @@ public class MemberServiceImpl implements MemberService {
         member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
         member.setName(memberFormDTO.getName());
         member.setPhoneNumber(member.getPhoneNumber());
+        member.setRole("ROLE_USER");
         return memberRepository.save(member);
     }
 
@@ -97,7 +98,7 @@ public class MemberServiceImpl implements MemberService {
 
         // 이메일 존재할 시 정보 업데이트
         Member member = findMember;
-        member.setPassword(memberFormDTO.getPassword());
+        member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
         member.setName(memberFormDTO.getName());
         member.setPhoneNumber(memberFormDTO.getPhoneNumber());
 
