@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Data
-@AllArgsConstructor
 public class LoginRequestDTO {
     @NotNull(message = "이메일은 빈칸일 수 없습니다")
     private String email;
