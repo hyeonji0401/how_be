@@ -21,10 +21,10 @@ public class MemberController {
     }
 
     @PostMapping("/join")
-    public Member createMember(@RequestBody MemberFormDTO memberFormDTO){
+    public void createMember(@RequestBody MemberFormDTO memberFormDTO){
         System.out.print(memberFormDTO.getEmail());
         System.out.println(memberFormDTO.getPassword());
-        return memberService.createMember(memberFormDTO);
+        memberService.createMember(memberFormDTO);
     }
 
     //로그인

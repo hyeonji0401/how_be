@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,25 +23,35 @@ import java.util.stream.Collectors;
 @Service
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Autowired
-    public MemberServiceImpl(MemberRepository memberRepository){
+    public MemberServiceImpl(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.memberRepository = memberRepository;
+        this.bCryptPasswordEncoder=bCryptPasswordEncoder;
     }
 
     //회원가입
     @Override
-    public Member createMember(MemberFormDTO memberFormDTO){
+    public void createMember(MemberFormDTO memberFormDTO){
+        String email = memberFormDTO.getEmail();
+        String password = memberFormDTO.getPassword();
+
+        Boolean isExist = memberRepository.existsByEmail(email);
+
+        if(isExist){
+            return ;
+        }
+
         Member member = new Member();
-        List<String> roles = new ArrayList<>();
-        roles.add("USER");
-        member.setEmail(memberFormDTO.getEmail());
-        member.setPassword(memberFormDTO.getPassword());
+        member.setEmail(email);
+        member.setPassword(bCryptPasswordEncoder.encode(password));
         member.setName(memberFormDTO.getName());
         member.setPhoneNumber(memberFormDTO.getPhoneNumber());
-        member.setRoles(roles);
-        return memberRepository.save(member);
+        member.setRole("ROLE_USER");
+
+        memberRepository.save(member);
     }
 
 

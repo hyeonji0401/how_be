@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Document(collection = "member")
-public class Member implements UserDetails {
+public class Member{
     @Id
     private String id;
     @Indexed(unique = true)
@@ -25,39 +25,7 @@ public class Member implements UserDetails {
     private String name;
     private String phoneNumber;
 
+    private String role;
     
-    //userDetail 상속
-    private List<String> roles = new ArrayList<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
-    
-    @Override
-    public String getUsername() {
-        return id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

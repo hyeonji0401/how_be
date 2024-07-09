@@ -5,7 +5,7 @@ import HOW.how.dto.LoginRequestDTO;
 import HOW.how.dto.MemberFormDTO;
 
 public interface MemberService {
-    Member createMember(MemberFormDTO memberFormDTO);
+    void createMember(MemberFormDTO memberFormDTO);
     Member loginRequest(LoginRequestDTO loginRequestDTO);
 
     Member updateMember(MemberFormDTO memberFormDTO);
