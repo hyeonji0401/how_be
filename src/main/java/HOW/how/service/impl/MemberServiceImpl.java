@@ -99,6 +99,7 @@ public class MemberServiceImpl implements MemberService {
         }
 
         // 이메일 존재할 시 정보 업데이트
+
         Member member = findMember.get();
         member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
         member.setName(memberFormDTO.getName());
