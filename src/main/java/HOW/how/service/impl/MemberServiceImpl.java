@@ -21,6 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @Service
 public class MemberServiceImpl implements MemberService {
@@ -42,7 +44,8 @@ public class MemberServiceImpl implements MemberService {
         member.setEmail(memberFormDTO.getEmail());
         member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
         member.setName(memberFormDTO.getName());
-        member.setPhoneNumber(member.getPhoneNumber());
+        member.setPhoneNumber(memberFormDTO.getPhoneNumber());
+        member.setRole("ROLE_USER");
         return memberRepository.save(member);
     }
 
@@ -86,18 +89,18 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-    //@Override
+    @Override
     public Member updateMember(MemberFormDTO memberFormDTO){
-        Member findMember = memberRepository.findByEmail(memberFormDTO.getEmail());
+        Optional<Member> findMember = memberRepository.findByEmail(memberFormDTO.getEmail());
 
         // 해당 이메일 없을 시 null 반환
-        if(findMember==null){
+        if(findMember.isEmpty()){
             return null;
         }
 
         // 이메일 존재할 시 정보 업데이트
-        Member member = findMember;
-        member.setPassword(memberFormDTO.getPassword());
+        Member member = findMember.get();
+        member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
         member.setName(memberFormDTO.getName());
         member.setPhoneNumber(memberFormDTO.getPhoneNumber());
 

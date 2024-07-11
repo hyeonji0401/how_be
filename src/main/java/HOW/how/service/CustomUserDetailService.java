@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,10 +24,10 @@ public class CustomUserDetailService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username);
+        Optional<Member> member = memberRepository.findByEmail(username);
 
-        if(member!=null){
-            return new CustomUserDetails(member);
+        if(member.isPresent()){
+            return new CustomUserDetails(member.get());
         }
         return null;
 
