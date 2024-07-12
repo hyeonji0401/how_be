@@ -56,5 +56,11 @@ public class BoardServiceImpl implements BoardService {
                 .collect(Collectors.toList());
     }
 
+    //게시물 상세 조회
+    public BoardReadDTO getDetailPost(String id){
+        Optional<Board> OptionalBoard = this.boardRepository.findById(id);
+        return new BoardReadDTO(OptionalBoard.get());
+    }
+
 
 }

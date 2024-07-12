@@ -7,10 +7,7 @@ import HOW.how.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +25,15 @@ public class BoardController {
         return ResponseEntity.ok(boardService.create(boardCreateDTO));
     }
 
+    //글 전체 조회
     @GetMapping("/list")
     public ResponseEntity<List<BoardReadDTO>> getAllPost(){
         return ResponseEntity.ok(this.boardService.getAllPost());
+    }
+
+    //글 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardReadDTO> getDetailPost(@PathVariable("id") String id){
+        return ResponseEntity.ok(this.boardService.getDetailPost(id));
     }
 }

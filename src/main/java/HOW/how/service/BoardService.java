@@ -10,4 +10,5 @@ import java.util.List;
 public interface BoardService {
     Board create(BoardCreateDTO boardCreateDTO);
     List<BoardReadDTO> getAllPost();
+    BoardReadDTO getDetailPost(String id);
 }

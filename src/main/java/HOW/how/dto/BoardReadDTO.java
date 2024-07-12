@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 public class BoardReadDTO {
 
+    private String boardId;
     private String writer;
     private String title;
     private String content;
@@ -18,6 +19,7 @@ public class BoardReadDTO {
     private LocalDateTime updateDate;
 
     public BoardReadDTO(Board board) {
+        this.boardId = board.getId();
         this.writer = board.getMember().getName();
         this.title = board.getTitle();
         this.content = board.getContent();
