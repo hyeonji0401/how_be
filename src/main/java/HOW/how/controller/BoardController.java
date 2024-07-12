@@ -2,13 +2,16 @@ package HOW.how.controller;
 
 import HOW.how.domain.Board;
 import HOW.how.dto.BoardCreateDTO;
+import HOW.how.dto.BoardReadDTO;
 import HOW.how.service.BoardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Controller
@@ -23,4 +26,36 @@ public class BoardController {
         System.out.println("내용"+boardCreateDTO.getContent());
         return ResponseEntity.ok(boardService.create(boardCreateDTO));
     }
+
+    //글 전체 조회
+    @GetMapping("/list")
+    public ResponseEntity<List<BoardReadDTO>> getAllPost(){
+        return ResponseEntity.ok(this.boardService.getAllPost());
+    }
+
+    //글 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<BoardReadDTO> getDetailPost(@PathVariable("id") String id){
+        return ResponseEntity.ok(this.boardService.getDetailPost(id));
+    }
+
+    //글 수정
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BoardCreateDTO> updatePost(@PathVariable("id") String id, @RequestBody BoardCreateDTO boardCreateDTO){
+        System.out.println(boardCreateDTO.getTitle());
+        return ResponseEntity.ok(this.boardService.updatePost(id, boardCreateDTO));
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<?> deletePost(@PathVariable String id){
+        try {
+            this.boardService.deletePost(id);
+            return ResponseEntity.ok("Post deleted successfully");
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
+    }
+
 }
