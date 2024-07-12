@@ -36,4 +36,11 @@ public class BoardController {
     public ResponseEntity<BoardReadDTO> getDetailPost(@PathVariable("id") String id){
         return ResponseEntity.ok(this.boardService.getDetailPost(id));
     }
+
+    //글 수정
+    @PutMapping("/update/{id}")
+    public ResponseEntity<BoardCreateDTO> updatePost(@PathVariable("id") String id, @RequestBody BoardCreateDTO boardCreateDTO){
+        System.out.println(boardCreateDTO.getTitle());
+        return ResponseEntity.ok(this.boardService.updatePost(id, boardCreateDTO));
+    }
 }

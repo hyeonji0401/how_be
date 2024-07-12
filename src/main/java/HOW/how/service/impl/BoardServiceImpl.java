@@ -58,8 +58,22 @@ public class BoardServiceImpl implements BoardService {
 
     //게시물 상세 조회
     public BoardReadDTO getDetailPost(String id){
-        Optional<Board> OptionalBoard = this.boardRepository.findById(id);
-        return new BoardReadDTO(OptionalBoard.get());
+        Optional<Board> optionalBoard = this.boardRepository.findById(id);
+        return new BoardReadDTO(optionalBoard.get());
+    }
+
+    //게시물 수정
+    public BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO){
+        Optional<Board> optionalBoard = this.boardRepository.findById(id);
+        Board board = optionalBoard.get();
+        board.setTitle(boardCreateDTO.getTitle());
+        System.out.println(board.getTitle());
+        board.setContent(boardCreateDTO.getContent());
+        System.out.println(board.getContent());
+        board.setUpdateDate(LocalDateTime.now());
+        this.boardRepository.save(board);
+        return boardCreateDTO;
+
     }
 
 
