@@ -12,4 +12,5 @@ public interface BoardService {
     List<BoardReadDTO> getAllPost();
     BoardReadDTO getDetailPost(String id);
     BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO);
+    void deletePost(String id);
 }

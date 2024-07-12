@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -74,6 +75,16 @@ public class BoardServiceImpl implements BoardService {
         this.boardRepository.save(board);
         return boardCreateDTO;
 
+    }
+
+    //게시물 삭제
+    public void deletePost(String id){
+        Optional<Board> board = this.boardRepository.findById(id);
+        if(board.isPresent()){
+            this.boardRepository.deleteById(id);
+        } else {
+            throw new NoSuchElementException("Post not found");
+        }
     }
 
 
