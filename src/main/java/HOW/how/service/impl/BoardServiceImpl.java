@@ -7,6 +7,7 @@ import HOW.how.dto.BoardReadDTO;
 import HOW.how.repository.BoardRepository;
 import HOW.how.repository.MemberRepository;
 import HOW.how.service.BoardService;
+import HOW.how.service.GetAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,18 +24,9 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
-    private final MemberRepository memberRepository;
+    private final GetAuthenticationService getAuthenticationService;
 
 
-    //사용자 찾기
-    public Member getAuthentication(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        Optional<Member> member = memberRepository.findByEmail(username);
-        return member.get();
-
-    }
 
     //게시물 작성
     public Board create(BoardCreateDTO boardCreateDTO){
@@ -43,7 +35,7 @@ public class BoardServiceImpl implements BoardService {
         System.out.println(board.getTitle());
         board.setContent(boardCreateDTO.getContent());
         System.out.println(board.getContent());
-        board.setMember(getAuthentication());
+        board.setMember(getAuthenticationService.getAuthentication());
         board.setWriteDate(LocalDateTime.now());
         this.boardRepository.save(board);
         return board;

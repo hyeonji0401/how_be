@@ -55,5 +55,17 @@ public class MemberController {
         return ResponseEntity.ok(member);
     }
 
+    @GetMapping("/info")
+    public ResponseEntity<Member> getMemberInfo(){
+        Member member = memberService.getMemberInfo();
+        if(member ==null){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(member);
+
+    }
+
+
 
 }
