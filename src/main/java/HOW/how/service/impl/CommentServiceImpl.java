@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -21,6 +22,8 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final GetAuthenticationService getAuthenticationService;
     private final BoardRepository boardRepository;
+
+    //댓글 생성
     @Override
     public CommentCreateDTO create(CommentCreateDTO commentCreateDTO, String id){
         try {
@@ -48,6 +51,7 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    //댓글 수정
     @Override
     public CommentCreateDTO update(CommentCreateDTO commentCreateDTO, String commentId){
         Optional<Comment> optionalComment = this.commentRepository.findById(commentId);
@@ -59,5 +63,25 @@ public class CommentServiceImpl implements CommentService {
         comment.setUpdateDate(LocalDateTime.now());
         this.commentRepository.save(comment);
         return commentCreateDTO;
+    }
+
+    //댓글 삭제
+    @Override
+    public void delete(String boardId, String commentId){
+        Optional<Comment> optionalComment = this.commentRepository.findById(commentId);
+        if(optionalComment.isPresent()){
+            this.commentRepository.deleteById(commentId);
+        } else {
+            throw new NoSuchElementException("Comment not found");
+        }
+
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if (optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            board.getCommentList().removeIf(comment -> comment.getId().equals(commentId));
+            boardRepository.save(board);
+        } else {
+            throw new RuntimeException("게시판을 찾을 수 없습니다.");
+        }
     }
 }
