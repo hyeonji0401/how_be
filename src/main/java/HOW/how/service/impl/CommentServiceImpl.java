@@ -47,4 +47,17 @@ public class CommentServiceImpl implements CommentService {
             throw new RuntimeException("댓글을 생성하는 동안 오류가 발생했습니다.", e);
         }
     }
+
+    @Override
+    public CommentCreateDTO update(CommentCreateDTO commentCreateDTO, String commentId){
+        Optional<Comment> optionalComment = this.commentRepository.findById(commentId);
+        if(optionalComment.isEmpty()){
+            throw new RuntimeException("해당 댓글을 찾을 수 없습니다.");
+        }
+        Comment comment = optionalComment.get();
+        comment.setContent(commentCreateDTO.getContent());
+        comment.setUpdateDate(LocalDateTime.now());
+        this.commentRepository.save(comment);
+        return commentCreateDTO;
+    }
 }
