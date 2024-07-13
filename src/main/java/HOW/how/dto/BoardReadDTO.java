@@ -1,11 +1,15 @@
 package HOW.how.dto;
 
 import HOW.how.domain.Board;
+import HOW.how.domain.Comment;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -17,6 +21,7 @@ public class BoardReadDTO {
     private String content;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
+    private List<CommentReadDTO> commentReadDTOS = new ArrayList<>();
 
     public BoardReadDTO(Board board) {
         this.boardId = board.getId();
@@ -25,6 +30,11 @@ public class BoardReadDTO {
         this.content = board.getContent();
         this.writeDate = board.getWriteDate();
         this.updateDate = board.getUpdateDate();
+        if (board.getCommentList() != null) {
+            this.commentReadDTOS = board.getCommentList().stream()
+                    .map(CommentReadDTO::new)
+                    .collect(Collectors.toList());
+        }
     }
 
 }
