@@ -15,4 +15,6 @@ public interface MemberService {
     TokenDTO reissue(TokenRequestDTO tokenRequestDTO);
     Member updateMember(MemberFormDTO memberFormDTO);
 
+    Member getMemberInfo();
+
 }

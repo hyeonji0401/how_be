@@ -9,6 +9,7 @@ import HOW.how.dto.TokenRequestDTO;
 import HOW.how.jwt.JwtTokenProvider;
 import HOW.how.repository.MemberRepository;
 import HOW.how.repository.RefreshTokenRepository;
+import HOW.how.service.GetAuthenticationService;
 import HOW.how.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.apache.el.parser.Token;
@@ -32,6 +33,7 @@ public class MemberServiceImpl implements MemberService {
     private final AuthenticationManager authenticationManager;
 
     private final RefreshTokenRepository refreshTokenRepository;
+    private final GetAuthenticationService getAuthenticationService;
 
     //회원가입
     @Transactional
@@ -106,6 +108,11 @@ public class MemberServiceImpl implements MemberService {
         member.setPhoneNumber(memberFormDTO.getPhoneNumber());
 
         return memberRepository.save(member);
+    }
+
+    @Override
+    public Member getMemberInfo(){
+        return getAuthenticationService.getAuthentication();
     }
 
 }
