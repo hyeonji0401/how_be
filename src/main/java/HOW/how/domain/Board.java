@@ -22,4 +22,7 @@ public class Board {
     private Member member;
     @DBRef
     private List<Comment> commentList = new ArrayList<>();
+    @DBRef
+    private List<Liked> likeds = new ArrayList<>();
+
 }

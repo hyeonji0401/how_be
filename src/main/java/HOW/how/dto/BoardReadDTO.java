@@ -22,6 +22,7 @@ public class BoardReadDTO {
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private List<CommentReadDTO> commentReadDTOS = new ArrayList<>();
+    private int likedCount;
 
     public BoardReadDTO(Board board) {
         this.boardId = board.getId();
@@ -35,6 +36,10 @@ public class BoardReadDTO {
                     .map(CommentReadDTO::new)
                     .collect(Collectors.toList());
         }
+        if(board.getLikeds()!=null){
+            this.likedCount = board.getLikeds().size();
+        }
+
     }
 
 }
