@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -77,7 +76,7 @@ public class ApiDataServiceImpl implements ApiDataService {
             int exitCode = process.waitFor();
             if (exitCode != 0) {
                 System.out.println("Error executing file: " + filePath.getFileName());
-                System.out.println(output.toString());
+                System.out.println(output);
             } else {
                 System.out.println("Successfully executed file: " + filePath.getFileName());
             }
