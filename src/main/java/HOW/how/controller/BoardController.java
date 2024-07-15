@@ -15,12 +15,11 @@ import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Controller
-@RequestMapping("/board")
 public class BoardController {
     private final BoardService boardService;
     
     //글 작성
-    @PostMapping("/create")
+    @PostMapping("post/create")
     public ResponseEntity<Board> create(@RequestBody BoardCreateDTO boardCreateDTO){
         System.out.println("제목"+boardCreateDTO.getTitle());
         System.out.println("내용"+boardCreateDTO.getContent());
@@ -28,25 +27,25 @@ public class BoardController {
     }
 
     //글 전체 조회
-    @GetMapping("/list")
+    @GetMapping("board/list")
     public ResponseEntity<List<BoardReadDTO>> getAllPost(){
         return ResponseEntity.ok(this.boardService.getAllPost());
     }
 
     //글 상세 조회
-    @GetMapping("/{id}")
+    @GetMapping("board/{id}")
     public ResponseEntity<BoardReadDTO> getDetailPost(@PathVariable("id") String id){
         return ResponseEntity.ok(this.boardService.getDetailPost(id));
     }
 
     //글 수정
-    @PutMapping("/update/{id}")
+    @PutMapping("post/update/{id}")
     public ResponseEntity<BoardCreateDTO> updatePost(@PathVariable("id") String id, @RequestBody BoardCreateDTO boardCreateDTO){
         System.out.println(boardCreateDTO.getTitle());
         return ResponseEntity.ok(this.boardService.updatePost(id, boardCreateDTO));
     }
 
-    @DeleteMapping("delete/{id}")
+    @DeleteMapping("post/delete/{id}")
     public ResponseEntity<?> deletePost(@PathVariable String id){
         try {
             this.boardService.deletePost(id);
