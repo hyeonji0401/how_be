@@ -39,7 +39,7 @@ public class JwtTokenProvider {
 
         long now = (new Date()).getTime();
 
-        Date accessTokenExpiresIn = new Date(now + (1000*60*30));
+        Date accessTokenExpiresIn = new Date(now + (1000*60*60*24));
         String accessToken = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim("auth", authorities)
