@@ -9,11 +9,10 @@ service_key = "W8au71fF3t4zbcYex0DaM8rC31gJulZ7ytCE0j6XkyPzc9q1VkJZ6C6i3hEocGSYy
 all_data = []
 page_no = 1
 num_of_rows = 100
-max_page = 20
 
 json_file_path = "src/main/resources/jsonFile/apiJSON.json"
 
-while page_no <= max_page:
+while True:
     # API 요청 URL 구성
     request_url = f"{base_url}?serviceKey={service_key}&pageNo={page_no}&numOfRows={num_of_rows}"
 
