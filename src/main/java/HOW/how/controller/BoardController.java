@@ -45,6 +45,7 @@ public class BoardController {
         return ResponseEntity.ok(this.boardService.updatePost(id, boardCreateDTO));
     }
 
+    //게시글 삭제
     @DeleteMapping("post/delete/{id}")
     public ResponseEntity<?> deletePost(@PathVariable String id){
         try {
@@ -55,6 +56,12 @@ public class BoardController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
+    }
+
+    //게시글 검색
+    @GetMapping("/board/list/{keyword}")
+    public ResponseEntity<List<BoardReadDTO>> SearchPostWithKeyword(@PathVariable("keyword") String keyword){
+        return ResponseEntity.ok(boardService.searchPostWithKeyword(keyword));
     }
 
 }
