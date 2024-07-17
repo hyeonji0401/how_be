@@ -28,24 +28,20 @@ public class MemberDetailServiceImpl implements MemberDetailService {
         Member member = memberRepository.findById(memberDetailFormDTO.getMemberId()).orElse(null); // Member// 도메인 조회
         memberDetail.setMemberId(member);
         memberDetail.setAge(memberDetailFormDTO.getAge());
-        memberDetail.setDisability(memberDetailFormDTO.getDisability());
-        Degree disabilityDegree = new Degree();
-        disabilityDegree.setValue(memberDetailFormDTO.getDisabilityDegree().getValue());
-        disabilityDegree.setLabel(memberDetailFormDTO.getDisabilityDegree().getLabel());
-        memberDetail.setDisabilityDegree(disabilityDegree);
-        Degree education = new Degree();
-        education.setValue(memberDetailFormDTO.getEducation().getValue());
-        education.setLabel(memberDetailFormDTO.getEducation().getLabel());
-        memberDetail.setEducation(education);
+
+        memberDetail.setBothHands(memberDetailFormDTO.getBothHands());
+        memberDetail.setEyesight(memberDetailFormDTO.getEyesight());
+        memberDetail.setHandwork(memberDetailFormDTO.getHandwork());
+        memberDetail.setLiftPower(memberDetailFormDTO.getLiftPower());
+        memberDetail.setLstnTalk(memberDetailFormDTO.getLstnTalk());
+        memberDetail.setStndWalk(memberDetailFormDTO.getStndWalk());
+
+        memberDetail.setJobNm(memberDetailFormDTO.getJobNm());
+        memberDetail.setCareer(memberDetailFormDTO.getCareer());
+        memberDetail.setEducation(memberDetailFormDTO.getEducation());
+        memberDetail.setLocation(memberDetailFormDTO.getLocation());
         memberDetail.setLicenses(memberDetailFormDTO.getLicenses());
-        memberDetail.setExperience(memberDetailFormDTO.getExperience());
-        memberDetail.setRegion(memberDetailFormDTO.getRegion());
-        memberDetail.setJob(memberDetailFormDTO.getJob());
-        memberDetail.setDigitalLiteracy(memberDetailFormDTO.getDigitalLiteracy());
-        memberDetail.setLanguageSkills(memberDetailFormDTO.getLanguageSkills());
-        memberDetail.setInterests(memberDetailFormDTO.getInterests());
-        memberDetail.setStrengths(memberDetailFormDTO.getStrengths());
-        memberDetail.setWorkSupport(memberDetailFormDTO.getWorkSupport());
+
         return memberDetailRepository.save(memberDetail);
     }
 }
