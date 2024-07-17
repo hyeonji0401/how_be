@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -83,15 +84,23 @@ public class BoardServiceImpl implements BoardService {
 
     //게시물 검색
     public List<BoardReadDTO> searchPostWithKeyword(String keyword){
-        List<Board> boards = boardRepository.findByTitleContaining(keyword);
-        boards.addAll(boardRepository.findAll().stream()
-                .filter(board -> removeHtmlTags(board.getContent()).contains(keyword))
-                .collect(Collectors.toList()));
-        return boards.stream()
-                .distinct()
-                .map(BoardReadDTO::new)
-                .collect(Collectors.toList());
+        List<Board> boards = boardRepository.findAll();
+    List<Board> matchedBoards = new ArrayList<>();
+
+    for (Board board : boards) {
+        String title = removeHtmlTags(board.getTitle());
+        String content = removeHtmlTags(board.getContent());
+
+        if (title.contains(keyword) || content.contains(keyword)) {
+            matchedBoards.add(board);
+        }
     }
+
+    return matchedBoards.stream()
+            .distinct()
+            .map(BoardReadDTO::new)
+            .collect(Collectors.toList());
+}
 
 
     //마크업 태그 파싱 함수
