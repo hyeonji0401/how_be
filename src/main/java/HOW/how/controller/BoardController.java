@@ -21,8 +21,6 @@ public class BoardController {
     //글 작성
     @PostMapping("post/create")
     public ResponseEntity<Board> create(@RequestBody BoardCreateDTO boardCreateDTO){
-        System.out.println("제목"+boardCreateDTO.getTitle());
-        System.out.println("내용"+boardCreateDTO.getContent());
         return ResponseEntity.ok(boardService.create(boardCreateDTO));
     }
 
@@ -59,8 +57,8 @@ public class BoardController {
     }
 
     //게시글 검색
-    @GetMapping("/board/list/{keyword}")
-    public ResponseEntity<List<BoardReadDTO>> SearchPostWithKeyword(@PathVariable("keyword") String keyword){
+    @GetMapping("board/list/search")
+    public ResponseEntity<List<BoardReadDTO>> SearchPostWithKeyword(@RequestParam(value = "keyword") String keyword){
         return ResponseEntity.ok(boardService.searchPostWithKeyword(keyword));
     }
 
