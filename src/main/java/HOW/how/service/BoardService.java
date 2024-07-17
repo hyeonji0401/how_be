@@ -13,4 +13,6 @@ public interface BoardService {
     BoardReadDTO getDetailPost(String id);
     BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO);
     void deletePost(String id);
+
+    List<BoardReadDTO> searchPostWithKeyword(String keyword);
 }

@@ -9,6 +9,8 @@ import HOW.how.repository.MemberRepository;
 import HOW.how.service.BoardService;
 import HOW.how.service.GetAuthenticationService;
 import lombok.RequiredArgsConstructor;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Safelist;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -77,6 +79,24 @@ public class BoardServiceImpl implements BoardService {
         } else {
             throw new NoSuchElementException("Post not found");
         }
+    }
+
+    //게시물 검색
+    public List<BoardReadDTO> searchPostWithKeyword(String keyword){
+        List<Board> boards = boardRepository.findByTitleContaining(keyword);
+        boards.addAll(boardRepository.findAll().stream()
+                .filter(board -> removeHtmlTags(board.getContent()).contains(keyword))
+                .collect(Collectors.toList()));
+        return boards.stream()
+                .distinct()
+                .map(BoardReadDTO::new)
+                .collect(Collectors.toList());
+    }
+
+
+    //마크업 태그 파싱 함수
+    private String removeHtmlTags(String content) {
+        return Jsoup.clean(content, Safelist.none());
     }
 
 
