@@ -45,11 +45,36 @@ public class BoardServiceImpl implements BoardService {
     }
 
     //게시물 전체 조회
-    public List<BoardReadDTO> getAllPost(){
-        List<Board> boards = this.boardRepository.findAll();
-        return boards.stream()
-                .map(BoardReadDTO::new)
-                .collect(Collectors.toList());
+    public List<BoardReadDTO> getAllPost(String keyword){
+        if(keyword.isEmpty()){
+            List<Board> boards = this.boardRepository.findAll();
+            return boards.stream()
+                    .map(BoardReadDTO::new)
+                    .collect(Collectors.toList());
+
+        }
+        //게시물 검색
+        else{
+            List<Board> allBoards = boardRepository.findAll();
+            List<Board> matchedBoards = new ArrayList<>();
+
+            for (Board board : allBoards) {
+                String title = board.getTitle();
+                String contentWithoutHtml = removeHtmlTags(board.getContent());
+
+                if (title.contains(keyword) || contentWithoutHtml.contains(keyword)) {
+                    System.out.println("게시글:"+board.getContent()+"제목:"+board.getTitle());
+                    matchedBoards.add(board);
+                }
+            }
+
+            return matchedBoards.stream()
+                    .distinct()
+                    .map(BoardReadDTO::new)
+                    .collect(Collectors.toList());
+        }
+
+
     }
 
     //게시물 상세 조회
@@ -81,27 +106,6 @@ public class BoardServiceImpl implements BoardService {
             throw new NoSuchElementException("Post not found");
         }
     }
-
-    //게시물 검색
-    public List<BoardReadDTO> searchPostWithKeyword(String keyword){
-        List<Board> boards = boardRepository.findAll();
-    List<Board> matchedBoards = new ArrayList<>();
-
-    for (Board board : boards) {
-        String title = removeHtmlTags(board.getTitle());
-        String content = removeHtmlTags(board.getContent());
-
-        if (title.contains(keyword) || content.contains(keyword)) {
-            matchedBoards.add(board);
-        }
-    }
-
-    return matchedBoards.stream()
-            .distinct()
-            .map(BoardReadDTO::new)
-            .collect(Collectors.toList());
-}
-
 
     //마크업 태그 파싱 함수
     private String removeHtmlTags(String content) {
