@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface BoardService {
     Board create(BoardCreateDTO boardCreateDTO);
-    List<BoardReadDTO> getAllPost();
+    List<BoardReadDTO> getAllPost(String keyword);
     BoardReadDTO getDetailPost(String id);
     BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO);
     void deletePost(String id);
 
-    List<BoardReadDTO> searchPostWithKeyword(String keyword);
+//    List<BoardReadDTO> searchPostWithKeyword(String keyword);
 }

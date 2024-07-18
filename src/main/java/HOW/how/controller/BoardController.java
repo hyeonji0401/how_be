@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,10 +27,17 @@ public class BoardController {
         return ResponseEntity.ok(boardService.create(boardCreateDTO));
     }
 
-    //글 전체 조회
+    //글 전체 조회 & 검색
     @GetMapping("board/list")
-    public ResponseEntity<List<BoardReadDTO>> getAllPost(){
-        return ResponseEntity.ok(this.boardService.getAllPost());
+    public ResponseEntity<List<BoardReadDTO>> getAllPost(@RequestParam(value = "keyword", defaultValue = "") String keyword){
+        //url 한글 디코딩
+        try {
+            keyword = URLDecoder.decode(keyword, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        System.out.println(keyword);
+        return ResponseEntity.ok(this.boardService.getAllPost(keyword));
     }
 
     //글 상세 조회
@@ -56,10 +66,5 @@ public class BoardController {
         }
     }
 
-    //게시글 검색
-    @GetMapping("board/list/search")
-    public ResponseEntity<List<BoardReadDTO>> SearchPostWithKeyword(@RequestParam(value = "keyword") String keyword){
-        return ResponseEntity.ok(boardService.searchPostWithKeyword(keyword));
-    }
 
 }
