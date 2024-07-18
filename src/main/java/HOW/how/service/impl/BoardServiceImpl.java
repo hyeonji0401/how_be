@@ -11,6 +11,7 @@ import HOW.how.service.GetAuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Safelist;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,45 +34,58 @@ public class BoardServiceImpl implements BoardService {
 
     //게시물 작성
     public Board create(BoardCreateDTO boardCreateDTO){
-        Board board = new Board();
-        board.setTitle(boardCreateDTO.getTitle());
-        System.out.println(board.getTitle());
-        board.setContent(boardCreateDTO.getContent());
-        System.out.println(board.getContent());
-        board.setMember(getAuthenticationService.getAuthentication());
-        board.setWriteDate(LocalDateTime.now());
-        this.boardRepository.save(board);
-        return board;
+        try {
+            Board board = new Board();
+            board.setTitle(boardCreateDTO.getTitle());
+            board.setContent(boardCreateDTO.getContent());
+            board.setMember(getAuthenticationService.getAuthentication());
+            board.setWriteDate(LocalDateTime.now());
+            this.boardRepository.save(board);
+            return board;
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("입력값이 null입니다.", e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException("데이터베이스에 접근하는 동안 문제가 발생했습니다.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("게시글을 생성하는 동안 예상치 못한 오류가 발생했습니다.", e);
+        }
     }
 
     //게시물 전체 조회
     public List<BoardReadDTO> getAllPost(String keyword){
-        if(keyword.isEmpty()){
-            List<Board> boards = this.boardRepository.findAll();
-            return boards.stream()
-                    .map(BoardReadDTO::new)
-                    .collect(Collectors.toList());
-
-        }
-        //게시물 검색
-        else{
-            List<Board> allBoards = boardRepository.findAll();
-            List<Board> matchedBoards = new ArrayList<>();
-
-            for (Board board : allBoards) {
-                String title = board.getTitle();
-                String contentWithoutHtml = removeHtmlTags(board.getContent());
-
-                if (title.contains(keyword) || contentWithoutHtml.contains(keyword)) {
-                    System.out.println("게시글:"+board.getContent()+"제목:"+board.getTitle());
-                    matchedBoards.add(board);
-                }
+        try {
+            if(keyword.isEmpty()){
+                List<Board> boards = this.boardRepository.findAll();
+                return boards.stream()
+                        .map(BoardReadDTO::new)
+                        .collect(Collectors.toList());
             }
+            //게시물 검색
+            else{
+                List<Board> allBoards = boardRepository.findAll();
+                List<Board> matchedBoards = new ArrayList<>();
 
-            return matchedBoards.stream()
-                    .distinct()
-                    .map(BoardReadDTO::new)
-                    .collect(Collectors.toList());
+                for (Board board : allBoards) {
+                    String title = board.getTitle();
+                    String contentWithoutHtml = removeHtmlTags(board.getContent());
+
+                    if (title.contains(keyword) || contentWithoutHtml.contains(keyword)) {
+                        System.out.println("게시글:"+board.getContent()+"제목:"+board.getTitle());
+                        matchedBoards.add(board);
+                    }
+                }
+
+                return matchedBoards.stream()
+                        .distinct()
+                        .map(BoardReadDTO::new)
+                        .collect(Collectors.toList());
+            }
+        } catch (NullPointerException e) {
+            throw new IllegalArgumentException("입력값이 null입니다.", e);
+        } catch (DataAccessException e) {
+            throw new RuntimeException("데이터베이스에 접근하는 동안 문제가 발생했습니다.", e);
+        } catch (Exception e) {
+            throw new RuntimeException("게시글을 검색하는 동안 예상치 못한 오류가 발생했습니다.", e);
         }
 
 
@@ -79,9 +93,19 @@ public class BoardServiceImpl implements BoardService {
 
     //게시물 상세 조회
     public BoardReadDTO getDetailPost(String id){
-        Optional<Board> optionalBoard = this.boardRepository.findById(id);
-        return new BoardReadDTO(optionalBoard.get());
+        try {
+            Optional<Board> optionalBoard = this.boardRepository.findById(id);
+            if (!optionalBoard.isPresent()) {
+                throw new IllegalArgumentException("게시글을 찾을 수 없습니다.");
+            }
+            return new BoardReadDTO(optionalBoard.get());
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("게시글을 찾는 동안 문제가 발생했습니다: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new RuntimeException("게시글을 찾는 동안 예상치 못한 오류가 발생했습니다.", e);
+        }
     }
+
 
     //게시물 수정
     public BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO){

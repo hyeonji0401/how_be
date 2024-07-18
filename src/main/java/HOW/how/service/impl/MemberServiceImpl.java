@@ -14,14 +14,18 @@ import HOW.how.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.apache.el.parser.Token;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -53,19 +57,24 @@ public class MemberServiceImpl implements MemberService {
 
     @Transactional
     @Override
-    public TokenDTO login(LoginRequestDTO loginRequestDTO){
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
-        Authentication authentication = authenticationManager.authenticate(authenticationToken);
-        TokenDTO tokenDTO = jwtTokenProvider.generateTokenDTO(authentication);
+    public TokenDTO login(LoginRequestDTO loginRequestDTO) {
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.getEmail(), loginRequestDTO.getPassword());
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            TokenDTO tokenDTO = jwtTokenProvider.generateTokenDTO(authentication);
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
-                .value(tokenDTO.getRefreshToken())
-                .build();
+            RefreshToken refreshToken = RefreshToken.builder()
+                    .key(authentication.getName())
+                    .value(tokenDTO.getRefreshToken())
+                    .build();
 
-        refreshTokenRepository.save(refreshToken);
-        return tokenDTO;
-
+            refreshTokenRepository.save(refreshToken);
+            return tokenDTO;
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while processing your request");
+        }
     }
 
     @Transactional
@@ -92,27 +101,39 @@ public class MemberServiceImpl implements MemberService {
 
 
     @Override
-    public Member updateMember(MemberFormDTO memberFormDTO){
-        Optional<Member> findMember = memberRepository.findByEmail(memberFormDTO.getEmail());
+    public Member updateMember(MemberFormDTO memberFormDTO) {
+        try {
+            Optional<Member> findMember = memberRepository.findByEmail(memberFormDTO.getEmail());
 
-        // 해당 이메일 없을 시 null 반환
-        if(findMember.isEmpty()){
-            return null;
+            // 해당 이메일 없을 시 예외 발생
+            if(findMember.isEmpty()){
+                throw new NoSuchElementException("No member found with the provided email");
+            }
+
+            // 이메일 존재할 시 정보 업데이트
+            Member member = findMember.get();
+            member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
+            member.setName(memberFormDTO.getName());
+            member.setPhoneNumber(memberFormDTO.getPhoneNumber());
+
+            return memberRepository.save(member);
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while updating the member");
         }
-
-        // 이메일 존재할 시 정보 업데이트
-
-        Member member = findMember.get();
-        member.setPassword(passwordEncoder.encode(memberFormDTO.getPassword()));
-        member.setName(memberFormDTO.getName());
-        member.setPhoneNumber(memberFormDTO.getPhoneNumber());
-
-        return memberRepository.save(member);
     }
+
 
     @Override
     public Member getMemberInfo(){
-        return getAuthenticationService.getAuthentication();
+        try {
+            return getAuthenticationService.getAuthentication();
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User is not authenticated");
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "An error occurred while getting the member info");
+        }
     }
 
 }
