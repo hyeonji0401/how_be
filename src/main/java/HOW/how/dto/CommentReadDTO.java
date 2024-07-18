@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class CommentReadDTO {
+    private String id;
     private String writer;
     private String content;
     private LocalDateTime writeDate;
@@ -14,7 +15,12 @@ public class CommentReadDTO {
 
 
     public CommentReadDTO(Comment comment){
-        this.writer = comment.getMember().getName();
+        this.id = comment.getId();
+        if(comment.getMember()==null){
+            this.writer = "(알수없음)";
+        }else{
+            this.writer = comment.getMember().getName();
+        }
         this.content = comment.getContent();
         this.writeDate = comment.getWriteDate();
         this.updateDate = comment.getUpdateDate();

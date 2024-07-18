@@ -17,4 +17,6 @@ public interface MemberService {
 
     Member getMemberInfo();
 
+    void withdraw();
+
 }

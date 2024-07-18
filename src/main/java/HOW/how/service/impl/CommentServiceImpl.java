@@ -28,16 +28,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentCreateDTO create(CommentCreateDTO commentCreateDTO, String id){
         Member member = getAuthenticationService.getAuthentication();
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if (optionalBoard.isEmpty()) {
+            throw new IllegalArgumentException("게시판을 찾을 수 없습니다.");
+        }
         Comment comment = new Comment();
         comment.setMember(member);
         comment.setBoardId(id);
         comment.setContent(commentCreateDTO.getContent());
         comment.setWriteDate(LocalDateTime.now());
         this.commentRepository.save(comment);
-        Optional<Board> optionalBoard = boardRepository.findById(id);
-        if (optionalBoard.isEmpty()) {
-            throw new IllegalArgumentException("게시판을 찾을 수 없습니다.");
-        }
         Board board = optionalBoard.get();
         if (board.getCommentList() == null) {
             board.setCommentList(new ArrayList<>());
