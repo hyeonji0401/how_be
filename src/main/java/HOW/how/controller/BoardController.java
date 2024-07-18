@@ -48,9 +48,17 @@ public class BoardController {
 
     //글 수정
     @PutMapping("post/update/{id}")
-    public ResponseEntity<BoardCreateDTO> updatePost(@PathVariable("id") String id, @RequestBody BoardCreateDTO boardCreateDTO){
-        System.out.println(boardCreateDTO.getTitle());
-        return ResponseEntity.ok(this.boardService.updatePost(id, boardCreateDTO));
+    public ResponseEntity<?> updatePost(@PathVariable("id") String id, @RequestBody BoardCreateDTO boardCreateDTO){
+        try {
+            this.boardService.updatePost(id, boardCreateDTO);
+            return ResponseEntity.ok("Post update Successfully");
+        }catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not the owner of this post");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
+        }
     }
 
     //게시글 삭제
@@ -61,10 +69,11 @@ public class BoardController {
             return ResponseEntity.ok("Post deleted successfully");
         } catch (NoSuchElementException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Post not found");
+        }catch (SecurityException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("You are not the owner of this post");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-
-
+    
 }

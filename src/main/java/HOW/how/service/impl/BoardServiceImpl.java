@@ -86,25 +86,27 @@ public class BoardServiceImpl implements BoardService {
     //게시물 수정
     public BoardCreateDTO updatePost(String id, BoardCreateDTO boardCreateDTO){
         Optional<Board> optionalBoard = this.boardRepository.findById(id);
-        Board board = optionalBoard.get();
+        Board board = optionalBoard.orElseThrow(() -> new NoSuchElementException("Post not found"));
+
+        if(!getAuthenticationService.getAuthentication().equals(board.getMember())){
+            throw new SecurityException("You are not the owner of this post");
+        }
+
         board.setTitle(boardCreateDTO.getTitle());
-        System.out.println(board.getTitle());
         board.setContent(boardCreateDTO.getContent());
-        System.out.println(board.getContent());
         board.setUpdateDate(LocalDateTime.now());
         this.boardRepository.save(board);
         return boardCreateDTO;
-
     }
 
     //게시물 삭제
     public void deletePost(String id){
-        Optional<Board> board = this.boardRepository.findById(id);
-        if(board.isPresent()){
-            this.boardRepository.deleteById(id);
-        } else {
-            throw new NoSuchElementException("Post not found");
+        Optional<Board> boardOpt = this.boardRepository.findById(id);
+        Board board = boardOpt.orElseThrow(() -> new NoSuchElementException("Post not found"));
+        if(!getAuthenticationService.getAuthentication().equals(board.getMember())){
+            throw new SecurityException("You are not the owner of this post");
         }
+        this.boardRepository.delete(board);
     }
 
     //마크업 태그 파싱 함수
