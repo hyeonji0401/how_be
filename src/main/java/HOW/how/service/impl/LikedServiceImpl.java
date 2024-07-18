@@ -24,28 +24,33 @@ public class LikedServiceImpl implements LikedService {
     public Optional<Boolean> toggleLiked(String postId, User user){
         Board board = boardRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found"));
-        Optional<Member>memberOpt = memberRepository.findByEmail(user.getUsername());
-        if(memberOpt.isPresent()){
-            Member member = memberOpt.get();
-            Optional<Liked> likeOpt = likedRepository.findByBoardAndMember(board, member);
-            if (likeOpt.isPresent()) {
-                likedRepository.delete(likeOpt.get());
-                board.getLikeds().removeIf(liked -> liked.getId().equals(likeOpt.get().getId()));
-                boardRepository.save(board);
-                return Optional.of(false); // "좋아요" 삭제
-            } else {
-                Liked liked = new Liked();
-                liked.setMember(member);
-                liked.setBoard(board);
-                likedRepository.save(liked);
-                board.getLikeds().add(liked);
-                boardRepository.save(board);
-                return Optional.of(true); // "좋아요" 추가
-            }
+
+        // 사용자 찾기
+        Member member = memberRepository.findByEmail(user.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // "좋아요" 상태 확인
+        Optional<Liked> likeOpt = likedRepository.findByBoardAndMember(board, member);
+
+        if (likeOpt.isPresent()) {
+            // "좋아요"가 이미 있으면 삭제
+            Liked liked = likeOpt.get();
+            likedRepository.delete(liked);
+            board.getLikeds().removeIf(l -> l.getId().equals(liked.getId()));
+        } else {
+            // "좋아요"가 없으면 추가
+            Liked liked = new Liked();
+            liked.setMember(member);
+            liked.setBoard(board);
+            likedRepository.save(liked);
+            board.getLikeds().add(liked);
         }
-        else{
-            return Optional.empty(); // 사용자 찾을 수 없음
-        }
+
+        // 게시글 저장
+        boardRepository.save(board);
+
+        // "좋아요" 상태 반환 (존재하면 false, 없으면 true)
+        return Optional.of(!likeOpt.isPresent());
     }
 
 
