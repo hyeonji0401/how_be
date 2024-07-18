@@ -69,6 +69,7 @@ public class MemberController {
         return ResponseEntity.ok(member);
     }
 
+    //회원 정보 불러오기
     @GetMapping("/info")
     public ResponseEntity<?> getMemberInfo(){
         try{
@@ -81,8 +82,13 @@ public class MemberController {
         }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
 
-
+    //회원 탈퇴
+    @GetMapping("/withdraw")
+    public ResponseEntity<?> withdraw(){
+        memberService.withdraw();
+        return ResponseEntity.ok("회원탈퇴가 성공적으로 이루어졌습니다");
     }
 
 

@@ -26,7 +26,12 @@ public class BoardReadDTO {
 
     public BoardReadDTO(Board board) {
         this.boardId = board.getId();
-        this.writer = board.getMember().getName();
+        if(board.getMember()==null){
+            this.writer="(알수없음)";
+        }else{
+            this.writer = board.getMember().getName();
+        }
+
         this.title = board.getTitle();
         this.content = board.getContent();
         this.writeDate = board.getWriteDate();

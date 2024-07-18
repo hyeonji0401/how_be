@@ -1,14 +1,12 @@
 package HOW.how.service.impl;
 
-import HOW.how.domain.Member;
-import HOW.how.domain.RefreshToken;
+import HOW.how.domain.*;
 import HOW.how.dto.LoginRequestDTO;
 import HOW.how.dto.MemberFormDTO;
 import HOW.how.dto.TokenDTO;
 import HOW.how.dto.TokenRequestDTO;
 import HOW.how.jwt.JwtTokenProvider;
-import HOW.how.repository.MemberRepository;
-import HOW.how.repository.RefreshTokenRepository;
+import HOW.how.repository.*;
 import HOW.how.service.GetAuthenticationService;
 import HOW.how.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -38,6 +37,9 @@ public class MemberServiceImpl implements MemberService {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final GetAuthenticationService getAuthenticationService;
+    private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
+    private final LikedRepository likedRepository;
 
     //회원가입
     @Transactional
@@ -55,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
         return memberRepository.save(member);
     }
 
+    //로그인
     @Transactional
     @Override
     public TokenDTO login(LoginRequestDTO loginRequestDTO) {
@@ -77,6 +80,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    //토큰 재발급
     @Transactional
     public TokenDTO reissue(TokenRequestDTO tokenRequestDTO){
         if(!jwtTokenProvider.validateToken(tokenRequestDTO.getRefreshToken())){
@@ -99,7 +103,7 @@ public class MemberServiceImpl implements MemberService {
         return tokenDTO;
     }
 
-
+    //멤버 정보 수정
     @Override
     public Member updateMember(MemberFormDTO memberFormDTO) {
         try {
@@ -124,7 +128,7 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
-
+    //멤버 정보 받아오기
     @Override
     public Member getMemberInfo(){
         try {
@@ -136,4 +140,24 @@ public class MemberServiceImpl implements MemberService {
         }
     }
 
+    //회원탈퇴
+    @Override
+    public void withdraw(){
+        Member member = getAuthenticationService.getAuthentication();
+        List<Board> boards = boardRepository.findByMember(member);
+        for(Board board : boards){
+            board.setMember(null);
+            boardRepository.save(board);
+        }
+        List<Comment> comments = commentRepository.findByMember(member);
+        for(Comment comment : comments){
+            comment.setMember(null);
+            commentRepository.save(comment);
+        }
+        List<Liked> likeds = likedRepository.findByMember(member);
+        likedRepository.deleteAll(likeds);
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(member.getEmail());
+        refreshTokenRepository.delete(refreshToken.get());
+        memberRepository.delete(member);
+    }
 }
