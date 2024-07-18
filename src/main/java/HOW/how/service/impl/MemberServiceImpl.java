@@ -154,10 +154,8 @@ public class MemberServiceImpl implements MemberService {
             comment.setMember(null);
             commentRepository.save(comment);
         }
-        List<Liked> likeds = likedRepository.findByMember(member);
-        likedRepository.deleteAll(likeds);
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findById(member.getEmail());
-        refreshTokenRepository.delete(refreshToken.get());
+        likedRepository.deleteByMember(member);
+        refreshTokenRepository.deleteById(member.getEmail());
         memberRepository.delete(member);
     }
 }

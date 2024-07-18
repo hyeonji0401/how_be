@@ -5,6 +5,8 @@ import HOW.how.domain.Member;
 import HOW.how.dto.BoardCreateDTO;
 import HOW.how.dto.BoardReadDTO;
 import HOW.how.repository.BoardRepository;
+import HOW.how.repository.CommentRepository;
+import HOW.how.repository.LikedRepository;
 import HOW.how.repository.MemberRepository;
 import HOW.how.service.BoardService;
 import HOW.how.service.GetAuthenticationService;
@@ -29,6 +31,8 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final GetAuthenticationService getAuthenticationService;
+    private final CommentRepository commentRepository;
+    private final LikedRepository likedRepository;
 
 
 
@@ -130,6 +134,8 @@ public class BoardServiceImpl implements BoardService {
         if(!getAuthenticationService.getAuthentication().equals(board.getMember())){
             throw new SecurityException("You are not the owner of this post");
         }
+        this.commentRepository.deleteByBoardId(board.getId());
+        this.likedRepository.deleteByBoard(board);
         this.boardRepository.delete(board);
     }
 
