@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface LikedRepository extends MongoRepository<Liked, String> {
     Optional<Liked> findByBoardAndMember(Board board, Member member);
     List<Liked> findByMember(Member member);
+    void deleteByMember(Member member);
+    void deleteByBoard(Board board);
 }

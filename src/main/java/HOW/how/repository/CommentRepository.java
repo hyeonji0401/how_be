@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface CommentRepository extends MongoRepository<Comment, String> {
     List<Comment> findByMember(Member member);
+    void deleteByBoardId(String boardId);
 }
