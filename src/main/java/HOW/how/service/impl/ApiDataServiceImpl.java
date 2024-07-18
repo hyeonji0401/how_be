@@ -4,7 +4,7 @@ import HOW.how.domain.ApiData;
 import HOW.how.repository.ApiDataRepository;
 import HOW.how.service.ApiDataService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -17,14 +17,10 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ApiDataServiceImpl implements ApiDataService {
 
     private final ApiDataRepository apiDataRepository;
-
-    @Autowired
-    public ApiDataServiceImpl(ApiDataRepository apiDataRepository) {
-        this.apiDataRepository = apiDataRepository;
-    }
 
     @Override
     public List<ApiData> saveApiData() {
