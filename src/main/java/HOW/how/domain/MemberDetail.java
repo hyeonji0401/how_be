@@ -12,9 +12,9 @@ import java.util.List;
 @Document(collection = "memberDetail")
 public class MemberDetail {
     @Id
-    String detailId;
+    private String detailId;
     @DBRef //참조
-    Member memberId;
+    private Member memberId;
     private int age;
     private BothHands bothHands;
     private Eyesight eyesight;
@@ -27,19 +27,5 @@ public class MemberDetail {
     private String education;
     private String location;
     private List<String> licenses;
-
-//    private String disability;
-//    private Degree disabilityDegree;
-//    private Degree education;
-//    private List<String> licenses;
-//    private String experience;
-//    private String region;
-//    private String job;
-//    private String digitalLiteracy;
-//    private List<String> languageSkills;
-//    private String interests;
-//    private String strengths;
-//    private String workSupport;
-
 }
 

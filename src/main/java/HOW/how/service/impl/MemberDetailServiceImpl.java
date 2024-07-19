@@ -6,26 +6,25 @@ import HOW.how.domain.MemberDetail;
 import HOW.how.dto.MemberDetailFormDTO;
 import HOW.how.repository.MemberDetailRepository;
 import HOW.how.repository.MemberRepository;
+import HOW.how.service.GetAuthenticationService;
 import HOW.how.service.MemberDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberDetailServiceImpl implements MemberDetailService {
 
     private final MemberDetailRepository memberDetailRepository;
-    private final MemberRepository memberRepository;
-    @Autowired
-    public MemberDetailServiceImpl(MemberDetailRepository memberDetailRepository, MemberRepository memberRepository){
-        this.memberDetailRepository = memberDetailRepository;
-        this.memberRepository = memberRepository;
-    }
+    private final GetAuthenticationService getAuthenticationService;
+
 
     //로드맵을 위한 사용자 정보 입력
     @Override
     public MemberDetail createMemberDetail(MemberDetailFormDTO memberDetailFormDTO){
         MemberDetail memberDetail = new MemberDetail();
-        Member member = memberRepository.findById(memberDetailFormDTO.getMemberId()).orElse(null); // Member// 도메인 조회
+        Member member = getAuthenticationService.getAuthentication(); // Member// 도메인 조회
         memberDetail.setMemberId(member);
         memberDetail.setAge(memberDetailFormDTO.getAge());
 

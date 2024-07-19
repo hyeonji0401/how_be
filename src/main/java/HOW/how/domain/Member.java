@@ -26,6 +26,4 @@ public class Member{
     private String phoneNumber;
 
     private String role;
-    
-
 }
