@@ -54,7 +54,7 @@ public class JobRecommendServiceImpl implements JobRecommendService {
 
         try{
             Member member = getAuthenticationService.getAuthentication();
-            Optional<MemberDetail> optionalMemberDetail = memberDetailRepository.findByMemberId(member);
+            Optional<MemberDetail> optionalMemberDetail = memberDetailRepository.findByMember(member);
 
             updateJobCategories();
 

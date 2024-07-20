@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.Optional;
 
 public interface MemberDetailRepository extends MongoRepository<MemberDetail, String> {
-    Optional<MemberDetail> findByMemberId(Member member);
+    Optional<MemberDetail> findByMember(Member member);
 }
