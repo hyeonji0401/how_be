@@ -7,8 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Map;
 
-@Repository
+
 public interface JobRecommendService {
-    JobRecommend recommendJobs();
+    JobRecommend createJobRecommend();
+    JobRecommend updateJobRecommend();
+    JobRecommend recommendJobs(boolean isUpdate);
     JobRecommendDTO getJobRecommends();
 }

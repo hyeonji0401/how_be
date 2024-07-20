@@ -32,6 +32,9 @@ public class ApiDataServiceImpl implements ApiDataService {
 
         readJsonFile(jsonFilePath, apiDataList);
 
+        if(apiDataRepository.count() != 0) {
+            apiDataRepository.deleteAll();
+        }
         return apiDataRepository.saveAll(apiDataList);
     }
 
@@ -51,10 +54,9 @@ public class ApiDataServiceImpl implements ApiDataService {
 
     @Override
     public void executePythonFile(String scriptPath) {
-        String pythonInterpreter = "python"; // Windows 환경에서는 보통 python.exe
         try {
             Path filePath = Paths.get(scriptPath);
-            ProcessBuilder pb = new ProcessBuilder(pythonInterpreter, filePath.toString());
+            ProcessBuilder pb = new ProcessBuilder("python", filePath.toString());
             Process process = pb.start();
 
             // 파이썬 출력 및 오류 처리

@@ -18,7 +18,7 @@ public class ApiDataController {
 
     private final ApiDataService apiDataService;
 
-    @PostMapping("/update")
+    @PostMapping("/save")
     public ResponseEntity<List<ApiData>> getApiData() {
         List<ApiData> saveApiDataList = apiDataService.saveApiData();
         return ResponseEntity.ok(saveApiDataList);
