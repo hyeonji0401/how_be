@@ -4,10 +4,7 @@ import HOW.how.domain.MemberDetail;
 import HOW.how.dto.MemberDetailFormDTO;
 import HOW.how.service.MemberDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/memberDetail")
@@ -24,6 +21,12 @@ public class MemberDetailController {
     public MemberDetail createMemberDetail(@RequestBody MemberDetailFormDTO memberDetailFormDTO)
     {
         return memberDetailService.createMemberDetail(memberDetailFormDTO);
+    }
+
+    @PutMapping
+    public MemberDetail updateMemberDetail(@RequestBody MemberDetailFormDTO memberDetailFormDTO){
+        
+        return memberDetailService.updateMemberDetail(memberDetailFormDTO);
     }
 
 
