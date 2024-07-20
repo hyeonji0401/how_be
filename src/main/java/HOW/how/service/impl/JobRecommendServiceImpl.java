@@ -112,7 +112,6 @@ public class JobRecommendServiceImpl implements JobRecommendService {
         if(optionalJobRecommend.isPresent()){
             JobRecommend jobRecommend = optionalJobRecommend.get();
             JobRecommendDTO jobRecommendDTO = new JobRecommendDTO();
-            jobRecommendDTO.setId(jobRecommend.getId());
             jobRecommendDTO.setCompanyInfo(jobRecommend.getCompanyInfos());
             return jobRecommendDTO;
         }else {

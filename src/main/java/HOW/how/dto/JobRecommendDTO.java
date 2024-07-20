@@ -12,7 +12,5 @@ import java.util.Map;
 @Getter
 @Setter
 public class JobRecommendDTO {
-    @NotNull(message = "db오류")
-    private String id;
     private List<Map<String, Object>> companyInfo;
 }

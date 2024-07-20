@@ -3,7 +3,6 @@ package HOW.how.controller;
 import HOW.how.domain.JobRecommend;
 import HOW.how.dto.JobRecommendDTO;
 import HOW.how.service.JobRecommendService;
-import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,7 +26,7 @@ public class JobRecommendController {
     }
 
     @GetMapping("/get")
-    public ResponseEntity<JobRecommendDTO> getRecommendJobs(@RequestBody JobRecommendDTO jobRecommendDTO) {
+    public ResponseEntity<JobRecommendDTO> getRecommendJobs() {
         return ResponseEntity.ok(this.jobRecommendService.getJobRecommends());
     }
 
