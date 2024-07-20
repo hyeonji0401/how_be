@@ -17,5 +17,4 @@ public class MemberFormDTO {
     private String name;
     @NotNull(message = "전화번호는 빈칸일 수 없습니다")
     private String phoneNumber;
-
 }

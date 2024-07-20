@@ -6,46 +6,41 @@ import HOW.how.domain.MemberDetail;
 import HOW.how.dto.MemberDetailFormDTO;
 import HOW.how.repository.MemberDetailRepository;
 import HOW.how.repository.MemberRepository;
+import HOW.how.service.GetAuthenticationService;
 import HOW.how.service.MemberDetailService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class MemberDetailServiceImpl implements MemberDetailService {
 
     private final MemberDetailRepository memberDetailRepository;
-    private final MemberRepository memberRepository;
-    @Autowired
-    public MemberDetailServiceImpl(MemberDetailRepository memberDetailRepository, MemberRepository memberRepository){
-        this.memberDetailRepository = memberDetailRepository;
-        this.memberRepository = memberRepository;
-    }
+    private final GetAuthenticationService getAuthenticationService;
+
 
     //로드맵을 위한 사용자 정보 입력
     @Override
     public MemberDetail createMemberDetail(MemberDetailFormDTO memberDetailFormDTO){
         MemberDetail memberDetail = new MemberDetail();
-        Member member = memberRepository.findById(memberDetailFormDTO.getMemberId()).orElse(null); // Member// 도메인 조회
+        Member member = getAuthenticationService.getAuthentication(); // Member// 도메인 조회
         memberDetail.setMemberId(member);
         memberDetail.setAge(memberDetailFormDTO.getAge());
-        memberDetail.setDisability(memberDetailFormDTO.getDisability());
-        Degree disabilityDegree = new Degree();
-        disabilityDegree.setValue(memberDetailFormDTO.getDisabilityDegree().getValue());
-        disabilityDegree.setLabel(memberDetailFormDTO.getDisabilityDegree().getLabel());
-        memberDetail.setDisabilityDegree(disabilityDegree);
-        Degree education = new Degree();
-        education.setValue(memberDetailFormDTO.getEducation().getValue());
-        education.setLabel(memberDetailFormDTO.getEducation().getLabel());
-        memberDetail.setEducation(education);
+
+        memberDetail.setBothHands(memberDetailFormDTO.getBothHands());
+        memberDetail.setEyesight(memberDetailFormDTO.getEyesight());
+        memberDetail.setHandwork(memberDetailFormDTO.getHandwork());
+        memberDetail.setLiftPower(memberDetailFormDTO.getLiftPower());
+        memberDetail.setLstnTalk(memberDetailFormDTO.getLstnTalk());
+        memberDetail.setStndWalk(memberDetailFormDTO.getStndWalk());
+
+        memberDetail.setJobNm(memberDetailFormDTO.getJobNm());
+        memberDetail.setCareer(memberDetailFormDTO.getCareer());
+        memberDetail.setEducation(memberDetailFormDTO.getEducation());
+        memberDetail.setLocation(memberDetailFormDTO.getLocation());
         memberDetail.setLicenses(memberDetailFormDTO.getLicenses());
-        memberDetail.setExperience(memberDetailFormDTO.getExperience());
-        memberDetail.setRegion(memberDetailFormDTO.getRegion());
-        memberDetail.setJob(memberDetailFormDTO.getJob());
-        memberDetail.setDigitalLiteracy(memberDetailFormDTO.getDigitalLiteracy());
-        memberDetail.setLanguageSkills(memberDetailFormDTO.getLanguageSkills());
-        memberDetail.setInterests(memberDetailFormDTO.getInterests());
-        memberDetail.setStrengths(memberDetailFormDTO.getStrengths());
-        memberDetail.setWorkSupport(memberDetailFormDTO.getWorkSupport());
+
         return memberDetailRepository.save(memberDetail);
     }
 }
