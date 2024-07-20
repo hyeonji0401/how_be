@@ -1,15 +1,12 @@
 package HOW.how.service.impl;
 
-import HOW.how.domain.Degree;
 import HOW.how.domain.Member;
 import HOW.how.domain.MemberDetail;
 import HOW.how.dto.MemberDetailFormDTO;
 import HOW.how.repository.MemberDetailRepository;
-import HOW.how.repository.MemberRepository;
 import HOW.how.service.GetAuthenticationService;
 import HOW.how.service.MemberDetailService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
