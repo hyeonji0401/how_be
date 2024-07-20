@@ -1,12 +1,9 @@
 package HOW.how.dto;
 
-import HOW.how.domain.Degree;
 import HOW.how.enums.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
