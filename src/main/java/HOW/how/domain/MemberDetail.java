@@ -14,7 +14,7 @@ public class MemberDetail {
     @Id
     private String detailId;
     @DBRef //참조
-    private Member memberId;
+    private Member member;
     private int age;
     private BothHands bothHands;
     private Eyesight eyesight;

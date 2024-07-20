@@ -1,6 +1,7 @@
 package HOW.how.dto;
 
 import HOW.how.domain.Degree;
+import HOW.how.domain.MemberDetail;
 import HOW.how.enums.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -26,5 +27,4 @@ public class MemberDetailFormDTO {
     private String education;
     private String location;
     private List<String> licenses;
-
 }

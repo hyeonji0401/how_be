@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class MemberDetailServiceImpl implements MemberDetailService {
@@ -20,27 +22,46 @@ public class MemberDetailServiceImpl implements MemberDetailService {
     private final GetAuthenticationService getAuthenticationService;
 
 
-    //로드맵을 위한 사용자 정보 입력
+    //사용자 정보 입력
     @Override
     public MemberDetail createMemberDetail(MemberDetailFormDTO memberDetailFormDTO){
-        MemberDetail memberDetail = new MemberDetail();
         Member member = getAuthenticationService.getAuthentication(); // Member// 도메인 조회
-        memberDetail.setMemberId(member);
-        memberDetail.setAge(memberDetailFormDTO.getAge());
+        Optional<MemberDetail> memberDetailOpt = memberDetailRepository.findByMember(member);
+        if(memberDetailOpt.isPresent()){
+            System.out.println("존재");
+            MemberDetail existMemberDetail = memberDetailOpt.get();
+            existMemberDetail.setAge(memberDetailFormDTO.getAge());
+            existMemberDetail.setBothHands(memberDetailFormDTO.getBothHands());
+            existMemberDetail.setEyesight(memberDetailFormDTO.getEyesight());
+            existMemberDetail.setHandwork(memberDetailFormDTO.getHandwork());
+            existMemberDetail.setLiftPower(memberDetailFormDTO.getLiftPower());
+            existMemberDetail.setLstnTalk(memberDetailFormDTO.getLstnTalk());
+            existMemberDetail.setStndWalk(memberDetailFormDTO.getStndWalk());
+            existMemberDetail.setJobNm(memberDetailFormDTO.getJobNm());
+            existMemberDetail.setCareer(memberDetailFormDTO.getCareer());
+            existMemberDetail.setEducation(memberDetailFormDTO.getEducation());
+            existMemberDetail.setLocation(memberDetailFormDTO.getLocation());
+            existMemberDetail.setLicenses(memberDetailFormDTO.getLicenses());
+            return memberDetailRepository.save(existMemberDetail);
 
-        memberDetail.setBothHands(memberDetailFormDTO.getBothHands());
-        memberDetail.setEyesight(memberDetailFormDTO.getEyesight());
-        memberDetail.setHandwork(memberDetailFormDTO.getHandwork());
-        memberDetail.setLiftPower(memberDetailFormDTO.getLiftPower());
-        memberDetail.setLstnTalk(memberDetailFormDTO.getLstnTalk());
-        memberDetail.setStndWalk(memberDetailFormDTO.getStndWalk());
-
-        memberDetail.setJobNm(memberDetailFormDTO.getJobNm());
-        memberDetail.setCareer(memberDetailFormDTO.getCareer());
-        memberDetail.setEducation(memberDetailFormDTO.getEducation());
-        memberDetail.setLocation(memberDetailFormDTO.getLocation());
-        memberDetail.setLicenses(memberDetailFormDTO.getLicenses());
-
-        return memberDetailRepository.save(memberDetail);
+        }
+        else{
+            System.out.println("처음");
+            MemberDetail memberDetail = new MemberDetail();
+            memberDetail.setMember(member);
+            memberDetail.setAge(memberDetailFormDTO.getAge());
+            memberDetail.setBothHands(memberDetailFormDTO.getBothHands());
+            memberDetail.setEyesight(memberDetailFormDTO.getEyesight());
+            memberDetail.setHandwork(memberDetailFormDTO.getHandwork());
+            memberDetail.setLiftPower(memberDetailFormDTO.getLiftPower());
+            memberDetail.setLstnTalk(memberDetailFormDTO.getLstnTalk());
+            memberDetail.setStndWalk(memberDetailFormDTO.getStndWalk());
+            memberDetail.setJobNm(memberDetailFormDTO.getJobNm());
+            memberDetail.setCareer(memberDetailFormDTO.getCareer());
+            memberDetail.setEducation(memberDetailFormDTO.getEducation());
+            memberDetail.setLocation(memberDetailFormDTO.getLocation());
+            memberDetail.setLicenses(memberDetailFormDTO.getLicenses());
+            return memberDetailRepository.save(memberDetail);
+        }
     }
 }
