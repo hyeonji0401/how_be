@@ -5,4 +5,5 @@ import HOW.how.dto.MemberDetailFormDTO;
 
 public interface MemberDetailService {
     MemberDetail createMemberDetail(MemberDetailFormDTO memberDetailFormDTO);
+    MemberDetail updateMemberDetail(MemberDetailFormDTO memberDetailFormDTO);
 }
