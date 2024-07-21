@@ -63,30 +63,4 @@ public class MemberDetailServiceImpl implements MemberDetailService {
         }
     }
 
-    @Override
-    public MemberDetail updateMemberDetail(MemberDetailFormDTO memberDetailFormDTO) {
-        Member member = getAuthenticationService.getAuthentication();
-        Optional<MemberDetail> memberDetail = memberDetailRepository.findByMemberId(member);
-
-        if(memberDetail.isPresent()){
-            MemberDetail memberDetailDB = memberDetail.get();
-
-            memberDetailDB.setAge(memberDetailFormDTO.getAge());
-            memberDetailDB.setBothHands(memberDetailFormDTO.getBothHands());
-            memberDetailDB.setEyesight(memberDetailFormDTO.getEyesight());
-            memberDetailDB.setHandwork(memberDetailFormDTO.getHandwork());
-            memberDetailDB.setLiftPower(memberDetailFormDTO.getLiftPower());
-            memberDetailDB.setLstnTalk(memberDetailFormDTO.getLstnTalk());
-            memberDetailDB.setStndWalk(memberDetailFormDTO.getStndWalk());
-            memberDetailDB.setJobNm(memberDetailFormDTO.getJobNm());
-            memberDetailDB.setCareer(memberDetailFormDTO.getCareer());
-            memberDetailDB.setEducation(memberDetailFormDTO.getEducation());
-            memberDetailDB.setLocation(memberDetailFormDTO.getLocation());
-            memberDetailDB.setLicenses(memberDetailFormDTO.getLicenses());
-
-            return memberDetailRepository.save(memberDetailDB);
-        }else {
-            throw new EntityNotFoundException("MemberDetail Update failed, MemberDetail not found for MemberId: " + member.getId());
-        }
-    }
 }

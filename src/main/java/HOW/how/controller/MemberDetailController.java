@@ -15,20 +15,11 @@ public class MemberDetailController {
     public MemberDetailController(MemberDetailService memberDetailService){
         this.memberDetailService = memberDetailService;
     }
-
-    //로드맵을 위한 사용자 정보 입력
+    //공고 추천을 위한 사용자 정보 입력
     @PostMapping
     public MemberDetail createMemberDetail(@RequestBody MemberDetailFormDTO memberDetailFormDTO)
     {
         return memberDetailService.createMemberDetail(memberDetailFormDTO);
     }
-
-    @PutMapping
-    public MemberDetail updateMemberDetail(@RequestBody MemberDetailFormDTO memberDetailFormDTO){
-        
-        return memberDetailService.updateMemberDetail(memberDetailFormDTO);
-    }
-
-
 
 }
