@@ -17,8 +17,8 @@ public class CorsConfig {
             public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedOrigins("http://localhost:3000/","https://how-fe.vercel.app")
-                        .allowedMethods("GET", "POST", "PUT","DELETE")
-                        .allowedHeaders("*")
+                        .allowedMethods("GET", "POST", "PUT","DELETE","OPTION")
+                        .allowedHeaders("Content-Type", "Authorization", "Origin", "Accept")
                         .allowCredentials(true);
             }
         };
